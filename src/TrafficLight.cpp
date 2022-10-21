@@ -37,13 +37,13 @@ void TrafficLight::waitForGreen()
     while (true) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         // until receive green
-        if (_queue.receive() == TrafficLightPhase::green) {return;}
+        if (queue.receive() == TrafficLightPhase::green) {return;}
     }
 }
 
 TrafficLightPhase TrafficLight::getCurrentPhase()
 {
-    return _currentPhase;
+    return currentPhase;
 }
 
 void TrafficLight::simulate()
@@ -73,17 +73,17 @@ void TrafficLight::cycleThroughPhases()
         // std::cout << elapse << std::endl;
         if (elapse > duration) {
             // toggles current phase
-            if (_currentPhase == TrafficLightPhase::red) {
-                _currentPhase = TrafficLightPhase::green;
+            if (currentPhase == TrafficLightPhase::red) {
+                currentPhase = TrafficLightPhase::green;
                 //std::cout << "Traffic light #" << _id << ": phase turns green." << std::endl;
             }
             else {
-                _currentPhase = TrafficLightPhase::red;
+                currentPhase = TrafficLightPhase::red;
                 //std::cout << "Traffic light #" << _id << ": phase turns red." << std::endl;
             }
             // send update
             TrafficLightPhase message = TrafficLight::getCurrentPhase();
-            _queue.send(std::move(message)); // may be blocked
+            queue.send(std::move(message)); // may be blocked
             /*
             auto sendFuture = std::async(std::launch::async, 
                                          &MessageQueue<TrafficLightPhase>::send,
